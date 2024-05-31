@@ -4,11 +4,13 @@ import { GoPencil } from "react-icons/go";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from "axios";
 import { Spinner } from "../UI/Spinner";
+import { BASE_URL } from "../Auth/Helper";
 
 const ViewNote = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [Note, setNote] = useState([]);
+  const [IsLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -23,7 +25,7 @@ const ViewNote = () => {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:8000/get-note/${id}`, config)
+      .get(`${BASE_URL}/get-note/${id}`, config)
       .then((res) => {
         setNote(res.data);
       })
@@ -44,13 +46,16 @@ const ViewNote = () => {
   };
 
   const DeleteNote = (id) => {
+    setIsLoading(true);
     axios
-      .delete(`http://localhost:8000/delete-note/${id}`, config)
+      .delete(`${BASE_URL}/delete-note/${id}`, config)
       .then((res) => {
+        setIsLoading(false);
         navigate("/");
       })
       .catch((error) => {
         console.log(error.response.data.message);
+        setIsLoading(false);
       });
   };
 
@@ -110,7 +115,8 @@ const ViewNote = () => {
             <div className="flex items-center justify-end gap-2">
               <button
                 onClick={() => DeleteNote(Note._id)}
-                className=" p-2 rounded-full bg-[#6c5ce7] hover:bg-[#a29bfe] duration-100"
+                className=" p-2 rounded-full bg-[#6c5ce7] hover:bg-[#a29bfe] duration-100 disabled:bg-[#a29bfe] disabled:cursor-default"
+                disabled={IsLoading ? true : false}
               >
                 <MdDeleteOutline className="text-white  text-xl" />
               </button>

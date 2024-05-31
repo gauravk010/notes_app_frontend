@@ -3,6 +3,7 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../Auth/Helper";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Header = () => {
       },
     };
     axios
-      .get(`http://localhost:8000/get-user`, config)
+      .get(`${BASE_URL}/get-user`, config)
       .then((res) => {
         setUser(res.data);
       })

@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { BASE_URL } from "../Auth/Helper";
 
 const Login = () => {
   const [ErrMsg, setErrMsg] = useState("");
@@ -20,7 +21,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     axios
-      .post(`http://localhost:8000/login`, data)
+      .post(`${BASE_URL}/login`, data)
       .then((res) => {
         if (res.data.success) {
           localStorage.setItem("authtoken", res.data.token);

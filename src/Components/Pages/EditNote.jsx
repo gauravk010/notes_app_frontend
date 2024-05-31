@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { Spinner } from "../UI/Spinner";
+import { BASE_URL } from "../Auth/Helper";
 
 const EditNote = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [Data, setData] = useState(false);
+  const [IsLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -36,7 +38,7 @@ const EditNote = () => {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:8000/get-note/${id}`, config)
+      .get(`${BASE_URL}/get-note/${id}`, config)
       .then((res) => {
         if (res.data) {
           setData(true);
@@ -50,13 +52,16 @@ const EditNote = () => {
   };
 
   const EditNote = (data) => {
+    setIsLoading(true);
     axios
-      .put(`http://localhost:8000/edit-note/${id}`, data, config)
+      .put(`${BASE_URL}/edit-note/${id}`, data, config)
       .then((res) => {
+        setIsLoading(false);
         navigate("/");
       })
       .catch((error) => {
         console.log(error.response.data.message);
+        setIsLoading(false);
         // setErrMsg(error.response.data.message);
       });
   };
@@ -159,9 +164,10 @@ const EditNote = () => {
               <div className="mt-6 flex justify-end">
                 <button
                   type="submit"
-                  className="w-fit flex justify-center rounded-md bg-[#6c5ce7] px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#a29bfe] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="w-fit flex cursor-pointer justify-center rounded-md bg-[#6c5ce7] px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#a29bfe] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-[#a29bfe] disabled:cursor-default"
+                  disabled={IsLoading ? true : false}
                 >
-                  Submit
+                  {IsLoading ? "Submitting.." : "Submit"}
                 </button>
               </div>
             </form>

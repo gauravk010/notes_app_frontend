@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { BASE_URL } from "../Auth/Helper";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Register = () => {
 
   const onSubmit = (data) => {
     axios
-      .post(`http://localhost:8000/register`, data)
+      .post(`${BASE_URL}/register`, data)
       .then((res) => {
         if (res.data.success) {
           navigate("/login");

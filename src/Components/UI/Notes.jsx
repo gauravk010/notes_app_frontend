@@ -4,6 +4,7 @@ import { GoPencil } from "react-icons/go";
 import { MdDeleteOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Spinner } from "./Spinner";
+import { BASE_URL } from "../Auth/Helper";
 
 const Notes = () => {
   const [Notes, setNotes] = useState([]);
@@ -23,7 +24,7 @@ const Notes = () => {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:8000/get-notes`, config)
+      .get(`${BASE_URL}/get-notes`, config)
       .then((res) => {
         if (res.data.result) {
           setNotes(res.data.result);
@@ -50,8 +51,9 @@ const Notes = () => {
   };
 
   const DeleteNote = (id) => {
+    setNotes([]);
     axios
-      .delete(`http://localhost:8000/delete-note/${id}`, config)
+      .delete(`${BASE_URL}/delete-note/${id}`, config)
       .then((res) => {
         fetchData();
       })
@@ -75,7 +77,7 @@ const Notes = () => {
               >
                 <div className="text-pretty w-full overflow-hidden">
                   <Link to={`/view-note/${item._id}`}>
-                    <h1 className="text-3xl font-semibold hover:text-neutral-500 duration-100 line-clamp-1">
+                    <h1 className="text-3xl font-semibold hover:text-neutral-500 duration-100 line-clamp-1 h-[40px]">
                       {item.title}
                     </h1>
                   </Link>
