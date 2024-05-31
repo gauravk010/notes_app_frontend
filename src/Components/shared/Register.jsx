@@ -9,6 +9,7 @@ import { BASE_URL } from "../Auth/Helper";
 const Register = () => {
   const navigate = useNavigate();
   const [ErrMsg, setErrMsg] = useState("");
+  const [IsLoading, setIsLoading] = useState(false);
   const schema = yup.object().shape({
     fullname: yup.string().required("Please enter the fullname"),
     email: yup.string().email().required("Please enter the email"),
@@ -22,15 +23,18 @@ const Register = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     axios
       .post(`${BASE_URL}/register`, data)
       .then((res) => {
         if (res.data.success) {
+          setIsLoading(false);
           navigate("/login");
         }
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
         setErrMsg(err.response.data.error);
       });
   };
@@ -117,9 +121,10 @@ const Register = () => {
             <div className="mt-6">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-[#6c5ce7] hover:bg-[#a29bfe] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-[#6c5ce7] hover:bg-[#a29bfe] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-[#a29bfe] disabled:cursor-default"
+                disabled={IsLoading ? true : false}
               >
-                Sign Up
+                {IsLoading ? "Sign Up.." : "Sign Up"}
               </button>
             </div>
           </form>

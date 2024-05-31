@@ -9,6 +9,7 @@ import { BASE_URL } from "../Auth/Helper";
 const Login = () => {
   const [ErrMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
+  const [IsLoading, setIsLoading] = useState(false);
   const schema = yup.object().shape({
     email: yup.string().email().required("Please enter the email"),
     password: yup.string().required("Please enter the password"),
@@ -20,16 +21,19 @@ const Login = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     axios
       .post(`${BASE_URL}/login`, data)
       .then((res) => {
         if (res.data.success) {
           localStorage.setItem("authtoken", res.data.token);
+          setIsLoading(false);
           navigate("/");
         }
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
         setErrMsg(err.response.data.message);
       });
   };
@@ -91,9 +95,10 @@ const Login = () => {
             <div className="mt-6">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-[#6c5ce7] hover:bg-[#a29bfe] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-[#6c5ce7] hover:bg-[#a29bfe] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-[#a29bfe] disabled:cursor-default"
+                disabled={IsLoading ? true : false}
               >
-                Sign in
+                {IsLoading ? "Sign in.." : "Sign in"}
               </button>
             </div>
           </form>
